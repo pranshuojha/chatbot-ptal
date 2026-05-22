@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brass Signature Dinner Set | P-TAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --ptal-maroon: #8B1D22;
+        --ptal-gold: #C5A059;
+        --ptal-bg: #FAF7F2;
+        --text-dark: #2C2C2C;
+        --text-light: #666666;
+        --border-color: #E5E0D8;
+    }
+    
+    body {
+        margin: 0;
+        font-family: 'Lato', sans-serif;
+        background-color: var(--ptal-bg);
+        color: var(--text-dark);
+        line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+        font-family: 'Playfair Display', serif;
+        color: var(--ptal-maroon);
+        margin-top: 0;
+    }
+
+    /* Minimal Header */
+    header {
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border-color);
+        background: white;
+    }
+    header img { height: 50px; }
+
+    /* Product Layout */
+    .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        gap: 50px;
+    }
+
+    /* Left: Image Gallery */
+    .product-gallery {
+        flex: 1;
+        min-width: 300px;
+    }
+    .main-image {
+        width: 100%;
+        border-radius: 4px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        margin-bottom: 15px;
+    }
+    .thumbnail-row {
+        display: flex;
+        gap: 15px;
+    }
+    .thumbnail {
+        width: calc(25% - 11.25px);
+        cursor: pointer;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        transition: 0.3s;
+    }
+    .thumbnail:hover, .thumbnail.active {
+        border-color: var(--ptal-gold);
+    }
+
+    /* Right: Product Details */
+    .product-details {
+        flex: 1;
+        min-width: 300px;
+    }
+    .breadcrumb {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .product-title {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    .product-price {
+        font-size: 1.5rem;
+        color: var(--text-dark);
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    .heritage-badge {
+        display: inline-block;
+        background-color: var(--ptal-gold);
+        color: white;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+        border-radius: 2px;
+    }
+    .product-description {
+        color: var(--text-light);
+        margin-bottom: 30px;
+        font-size: 1.05rem;
+    }
+
+    /* Add to Cart Actions */
+    .actions {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+    .qty-selector {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--border-color);
+        background: white;
+    }
+    .qty-btn {
+        background: none;
+        border: none;
+        padding: 15px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: var(--ptal-maroon);
+    }
+    .qty-input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+    }
+    .add-to-cart-btn {
+        flex: 1;
+        background-color: var(--ptal-maroon);
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-family: 'Lato', sans-serif;
+        font-weight: 700;
+    }
+    .add-to-cart-btn:hover {
+        background-color: var(--ptal-gold);
+    }
+
+    /* Accordion Details */
+    .accordion {
+        border-top: 1px solid var(--border-color);
+    }
+    .accordion-item {
+        border-bottom: 1px solid var(--border-color);
+    }
+    .accordion-header {
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        padding: 20px 0;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        color: var(--ptal-maroon);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+    }
+    .accordion-content {
+        padding-bottom: 20px;
+        display: none;
+        color: var(--text-light);
+    }
+    .accordion-content.active {
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .product-container { flex-direction: column; }
+    }
+</style>
+</head>
+<body>
+
+    <header>
+        <img src="image_9a8e4e.jpg" alt="P-TAL Logo">
+    </header>
+
+    <div class="product-container">
+        <div class="product-gallery">
+            <img src="image_9a8ecb.jpg" alt="Brass Dinner Set Main" class="main-image" id="mainImage">
+            <div class="thumbnail-row">
+                <img src="image_9a8ecb.jpg" alt="Thumb 1" class="thumbnail active" onclick="changeImage(this.src, this)">
+                <img src="image_9a8eaa.jpg" alt="Thumb 2" class="thumbnail" onclick="changeImage(this.src, this)">
+                <img src="image_9a8ec7.jpg" alt="Thumb 3" class="thumbnail" onclick="changeImage(this.src, this)">
+            </div>
+        </div>
+
+        <div class="product-details">
+            <div class="breadcrumb">Home / Dining / Dinnerware</div>
+            <h1 class="product-title">Brass Signature Dinner Set</h1>
+            <div class="product-price">₹5,200</div>
+            
+            <div class="heritage-badge">UNESCO Listed Craft</div>
+            
+            <p class="product-description">
+                Elevate your dining experience with this 6-piece hand-hammered brass dinner set. Crafted in Jandiala Guru by master Thathera artisans, this set doesn't just serve food—it serves a 400-year-old living history. Perfect for hosting or gifting.
+            </p>
+
+            <div class="actions">
+                <div class="qty-selector">
+                    <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                    <input type="text" class="qty-input" id="qty" value="1" readonly>
+                    <button class="qty-btn" onclick="updateQty(1)">+</button>
+                </div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion('story')">The Story <span>+</span></button>
+                    <div class="accordion-content" id="story">
+                        Each piece is hand-hammered by the Thathera community of Punjab. This traditional craft is the only craft form from India to be inscribed on the UNESCO Intangible Cultural Heritage List.
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion('care')">Care Instructions <span>+</span></button>
+                    <div class="accordion-content" id="care">
+                        Wash with a mild detergent and a soft sponge. To maintain the golden shine, rub with a mixture of tamarind and salt or use Pitambari powder periodically. Wipe dry immediately after washing.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image Gallery Script
+        function changeImage(src, element) {
+            document.getElementById('mainImage').src = src;
+            // Remove active class from all
+            let thumbs = document.querySelectorAll('.thumbnail');
+            thumbs.forEach(thumb => thumb.classList.remove('active'));
+            // Add active class to clicked
+            element.classList.add('active');
+        }
+
+        // Quantity Script
+        function updateQty(change) {
+            let input = document.getElementById('qty');
+            let current = parseInt(input.value);
+            let newValue = current + change;
+            if(newValue >= 1) {
+                input.value = newValue;
+            }
+        }
+
+        // Accordion Script
+        function toggleAccordion(id) {
+            let content = document.getElementById(id);
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+            } else {
+                content.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aapuu Chatbot Interface</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --ptal-maroon: #8B1D22;
+        --ptal-gold: #C5A059;
+        --ptal-bg: #FAF7F2;
+        --chat-bg: #ffffff;
+        --text-dark: #333333;
+        --bot-bubble: #F4F0E6;
+        --user-bubble: #8B1D22;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Lato', sans-serif;
+        background-color: #E5E0D8; /* Backdrop for the widget */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    /* Chatbot Container */
+    .chat-container {
+        width: 380px;
+        height: 600px;
+        background-color: var(--chat-bg);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(197, 160, 89, 0.4);
+    }
+
+    /* Chat Header */
+    .chat-header {
+        background-color: var(--ptal-maroon);
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 10;
+    }
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #4CAF50;
+        border-radius: 50%;
+        box-shadow: 0 0 5px #4CAF50;
+    }
+    .chat-header h2 {
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+    }
+    .chat-header p {
+        margin: 0;
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+
+    /* Chat Body (Messages) */
+    .chat-body {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background-color: var(--ptal-bg);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        scroll-behavior: smooth;
+    }
+
+    /* Message Bubbles */
+    .message {
+        max-width: 85%;
+        padding: 14px 18px;
+        font-size: 1rem;
+        line-height: 1.5;
+        animation: fadeIn 0.4s ease forwards;
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    .message.bot {
+        background-color: var(--bot-bubble);
+        color: var(--text-dark);
+        border-radius: 16px 16px 16px 4px;
+        align-self: flex-start;
+        border: 1px solid #EAE0D0;
+    }
+    .message.user {
+        background-color: var(--user-bubble);
+        color: white;
+        border-radius: 16px 16px 4px 16px;
+        align-self: flex-end;
+    }
+
+    /* Dynamic Options Area */
+    .chat-controls {
+        background-color: white;
+        padding: 15px 20px;
+        border-top: 1px solid #EAE0D0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .mcq-btn {
+        background-color: white;
+        border: 2px solid var(--ptal-gold);
+        color: var(--ptal-maroon);
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    .mcq-btn:hover {
+        background-color: var(--ptal-gold);
+        color: white;
+    }
+
+    /* Custom Input Field for Number */
+    .input-group {
+        display: flex;
+        gap: 10px;
+    }
+    .chat-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 2px solid #EAE0D0;
+        border-radius: 8px;
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        outline: none;
+    }
+    .chat-input:focus {
+        border-color: var(--ptal-gold);
+    }
+    .send-btn {
+        background-color: var(--ptal-maroon);
+        color: white;
+        border: none;
+        padding: 0 20px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    /* Product Card in Chat */
+    .chat-product {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #EAE0D0;
+        margin-top: 10px;
+    }
+    .chat-product img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+    .chat-product-details {
+        padding: 12px;
+    }
+    .chat-product-details h4 {
+        margin: 0 0 5px 0;
+        color: var(--ptal-maroon);
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+    }
+    .chat-product-details p {
+        margin: 0;
+        font-weight: bold;
+        color: var(--text-dark);
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Typing Indicator */
+    .typing {
+        display: flex;
+        gap: 4px;
+        padding: 15px;
+        background-color: var(--bot-bubble);
+        border-radius: 16px 16px 16px 4px;
+        width: fit-content;
+        border: 1px solid #EAE0D0;
+        align-self: flex-start;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--ptal-maroon);
+        border-radius: 50%;
+        animation: blink 1.4s infinite both;
+        opacity: 0.4;
+    }
+    .dot:nth-child(1) { animation-delay: 0.2s; }
+    .dot:nth-child(2) { animation-delay: 0.4s; }
+    .dot:nth-child(3) { animation-delay: 0.6s; }
+
+    @keyframes blink {
+        0%, 100% { opacity: 0.4; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="status-dot"></div>
+        <div>
+            <h2>Aapuu</h2>
+            <p>P-TAL Hosting Assistant</p>
+        </div>
+    </div>
+    
+    <div class="chat-body" id="chat-body">
+        </div>
+    
+    <div class="chat-controls" id="chat-controls">
+        </div>
+</div>
+
+<script>
+    const chatBody = document.getElementById('chat-body');
+    const chatControls = document.getElementById('chat-controls');
+
+    // Utility: Scroll to bottom
+    function scrollToBottom() {
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Utility: Add Bot Message
+    function botMessage(text, htmlContent = '') {
+        return new Promise(resolve => {
+            clearControls();
+            
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing message';
+            typingDiv.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            chatBody.appendChild(typingDiv);
+            scrollToBottom();
+
+            setTimeout(() => {
+                chatBody.removeChild(typingDiv);
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message bot';
+                msgDiv.innerHTML = text + htmlContent;
+                chatBody.appendChild(msgDiv);
+                scrollToBottom();
+                resolve();
+            }, 1000); // 1 second artificial delay for natural feel
+        });
+    }
+
+    // Utility: Add User Message
+    function userMessage(text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message user';
+        msgDiv.innerText = text;
+        chatBody.appendChild(msgDiv);
+        scrollToBottom();
+    }
+
+    // Utility: Show MCQ Buttons
+    function showOptions(options) {
+        clearControls();
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'mcq-btn';
+            btn.innerText = opt.label;
+            btn.onclick = () => {
+                userMessage(opt.label);
+                opt.action();
+            };
+            chatControls.appendChild(btn);
+        });
+    }
+
+    // Utility: Show Text Input
+    function showInput(placeholder, buttonText, action) {
+        clearControls();
+        const group = document.createElement('div');
+        group.className = 'input-group';
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'chat-input';
+        input.placeholder = placeholder;
+        
+        const btn = document.createElement('button');
+        btn.className = 'send-btn';
+        btn.innerText = buttonText;
+        
+        btn.onclick = () => {
+            if(input.value.trim() !== '') {
+                userMessage(input.value);
+                action(input.value);
+            }
+        };
+
+        input.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                btn.click();
+            }
+        });
+
+        group.appendChild(input);
+        group.appendChild(btn);
+        chatControls.appendChild(group);
+        input.focus();
+    }
+
+    function clearControls() {
+        chatControls.innerHTML = '';
+    }
+
+    // ==========================================
+    // CHATBOT FLOW LOGIC
+    // ==========================================
+
+    async function startChat() {
+        await botMessage('Joh host brass mein serve karte hain, unhe koi bhoolta nahi. What are you hosting next? ✨');
+        showOptions([
+            { label: 'Dinner this week', action: stepTwo },
+            { label: 'Something coming up', action: () => botMessage('Great! Let me know when you are ready to plan.') },
+            { label: 'I host regularly', action: () => botMessage('A true host! Let me show you our classic collections.') }
+        ]);
+    }
+
+    async function stepTwo() {
+        await botMessage('Toh chalo aapki table ready karte hain! I can send you a Hosting Starter Guide jisme kuch simple ways hain aapki evening ko special banane ke liye, plus a few brass ideas that fit the moment.<br><br>Kahan bhejun?');
+        showOptions([
+            { label: 'WhatsApp number', action: stepThree },
+            { label: 'Email ID', action: () => showInput('Enter your Email ID', 'Send', stepFour) }
+        ]);
+    }
+
+    async function stepThree() {
+        await botMessage('Apna number share kijiye and I’ll send the guide right away.');
+        showInput('+91', 'Send', stepFour);
+    }
+
+    async function stepFour(contactInfo) {
+        await botMessage('Perfect — aapka Hosting Starter Guide is on its way. 📖<br><br>Table par kitne log honge?');
+        showOptions([
+            { label: '4 or fewer', action: () => botMessage('Our intimate dining sets would be perfect for this.') },
+            { label: '5 to 8', action: stepFive },
+            { label: 'More than 8', action: () => botMessage('A grand feast! Let me show you our large serving bowls.') }
+        ]);
+    }
+
+    async function stepFive() {
+        const productHTML = `
+            <div class="chat-product">
+                <img src="https://via.placeholder.com/300x150/8B1D22/FFFFFF?text=Brass+Signature+Dinner+Set" alt="Dinner Set">
+                <div class="chat-product-details">
+                    <h4>Brass Signature Dinner Set</h4>
+                    <p>₹5,200</p>
+                </div>
+            </div>
+        `;
+        await botMessage('Then the Brass Signature Dinner Set is a beautiful fit.<br><br>Six hand-hammered pieces, Punjab ke UNESCO-listed artisans dwara banaye gaye. Gift-boxed.<br><br>Aapke guests khana aane se pehle hi iske baare mein puchenge!', productHTML);
+        showOptions([
+            { label: 'Shop the set →', action: stepEnd },
+            { label: 'What’s the story behind it?', action: stepSix },
+            { label: 'Show me more', action: () => botMessage('Here are some more stunning options for your table.') }
+        ]);
+    }
+
+    async function stepSix() {
+        await botMessage('Har piece Jandiala Guru mein ek Thathera craftsman dwara hand-hammer kiya gaya hai.<br><br>Ek 400-saal purani tradition — UNESCO-listed. Apni tarah ki aakhri.<br><br>Aap sirf ek table set nahi kar rahe. Aap ek living history host kar rahe hain.');
+        showOptions([
+            { label: 'Take me to the set →', action: stepEnd }
+        ]);
+    }
+
+    async function stepEnd() {
+        await botMessage('Wonderful choice. Aapki table bilkul set aur beautiful lagegi. ✨');
+    }
+
+    // Start the chat when page loads
+    window.onload = startChat;
+
+</script>
+</body>
+</html>
